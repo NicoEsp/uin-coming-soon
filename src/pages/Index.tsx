@@ -38,8 +38,9 @@ const Index = () => {
       <div className="container mx-auto px-4 py-8 sm:py-16 relative z-10 max-w-4xl text-center">
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6 leading-tight">
-            <span className="gradient-text">Level Up</span> Your 
-            <br className="hidden xs:block" />Financial Apps with
+            <span className="gradient-text">Level Up</span> Your{" "}
+            <br className="hidden xs:block" />Financial Apps{" "}
+            <br className="hidden xs:block" />with{" "}
             <br className="hidden xs:block" /><span className="gradient-text">Gaming</span> Power
           </h1>
           <p className="text-base sm:text-lg md:text-xl mb-8 text-gray-300 max-w-2xl mx-auto px-4">
