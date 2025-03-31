@@ -4,9 +4,10 @@ import { Mail } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const Index = () => {
+  // Animation state is kept for the controller at the bottom
   const [animationPosition, setAnimationPosition] = useState({ x: 0, y: 0 });
   
-  // Animation effect for the background element
+  // Animation effect for the controller element
   useEffect(() => {
     const moveAnimation = () => {
       const maxX = window.innerWidth * 0.05;
@@ -33,37 +34,6 @@ const Index = () => {
       
       {/* Purple gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-uin-purple/10 to-transparent"></div>
-      
-      {/* Animated background elements */}
-      <div 
-        className="absolute opacity-10 animate-float" 
-        style={{ 
-          transform: `translate(${animationPosition.x}px, ${animationPosition.y}px)`,
-          top: '10%',
-          left: '10%',
-        }}
-      >
-        <img 
-          src="/lovable-uploads/eae58b10-e8bc-4a1a-9297-f650a719c7d8.png" 
-          alt="Gaming Element" 
-          className="w-64 h-64 object-contain"
-        />
-      </div>
-      
-      <div 
-        className="absolute opacity-10 animate-float" 
-        style={{ 
-          transform: `translate(${-animationPosition.x}px, ${-animationPosition.y}px)`,
-          bottom: '15%',
-          left: '60%',
-        }}
-      >
-        <img 
-          src="/lovable-uploads/7612a97b-ff25-46a8-9525-b2277af6b9b4.png" 
-          alt="Gaming Element" 
-          className="w-64 h-64 object-contain"
-        />
-      </div>
       
       <div className="container mx-auto px-4 py-8 sm:py-16 relative z-10 max-w-4xl text-center">
         <div className="mb-8">
