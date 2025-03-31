@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Mail } from "lucide-react";
 import { useEffect, useState } from "react";
+import Header from "@/components/Header";
 
 const Index = () => {
   // Animation state is kept for the controller at the bottom
@@ -28,14 +29,18 @@ const Index = () => {
   }, []);
   
   return (
-    <div className="bg-uin-black text-white min-h-screen flex flex-col justify-center items-center relative overflow-hidden">
+    <div className="bg-uin-black text-white min-h-screen flex flex-col justify-between relative overflow-hidden">
       {/* Background with subtle pattern */}
       <div className="absolute inset-0 bg-uin-black bg-uin-grid opacity-20"></div>
       
       {/* Purple gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-uin-purple/10 to-transparent"></div>
       
-      <div className="container mx-auto px-4 py-8 sm:py-16 relative z-10 max-w-4xl text-center">
+      {/* Header */}
+      <Header />
+      
+      {/* Main content */}
+      <div className="container mx-auto px-4 py-8 sm:py-16 relative z-10 max-w-4xl text-center flex-grow flex flex-col justify-center">
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6 leading-tight">
             <span className="gradient-text">Level Up</span> Your{" "}
