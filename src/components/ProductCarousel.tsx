@@ -14,19 +14,19 @@ const ProductCarousel = () => {
     {
       id: 1,
       name: "Gaming Hub",
-      description: "Central platform connecting players and game developers",
+      description: "Publish and deliver Digital Goods to your users",
       icon: "🎮"
     },
     {
       id: 2,
       name: "G.E.T.",
-      description: "Game Engagement Technology for enhanced user retention",
+      description: "Gamification Engine Technology to boost retention",
       icon: "🏆"
     },
     {
       id: 3,
       name: "Tokenized Loyalty",
-      description: "Blockchain-backed rewards for dedicated gamers",
+      description: "Create your own Loyalty Program",
       icon: "💰"
     }
   ];
