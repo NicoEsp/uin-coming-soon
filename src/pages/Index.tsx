@@ -100,8 +100,15 @@ const Index = () => {
           </div>
         </div>
         
+        {/* New text above the sales@uin.tech button */}
+        <div className="my-8 sm:my-10 glow-effect">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2">
+            <span className="gradient-text">Contact Us</span>
+          </h2>
+        </div>
+        
         {/* Centered button container */}
-        <div className="mt-8 sm:mt-16 flex justify-center">
+        <div className="mt-4 sm:mt-8 flex justify-center">
           <Button 
             variant="outline" 
             className="border-uin-purple text-white hover:bg-uin-purple/20 flex items-center gap-2"
