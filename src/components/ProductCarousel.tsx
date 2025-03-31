@@ -13,20 +13,20 @@ const ProductCarousel = () => {
   const products = [
     {
       id: 1,
-      name: "Gaming Rewards",
-      description: "Engage users with gaming-inspired reward systems",
+      name: "Gaming Hub",
+      description: "Central platform connecting players and game developers",
       icon: "🎮"
     },
     {
       id: 2,
-      name: "Interactive Leaderboards",
-      description: "Drive competition with real-time leaderboards",
+      name: "G.E.T.",
+      description: "Game Engagement Technology for enhanced user retention",
       icon: "🏆"
     },
     {
       id: 3,
-      name: "Gamified Finance",
-      description: "Make financial apps exciting with game mechanics",
+      name: "Tokenized Loyalty",
+      description: "Blockchain-backed rewards for dedicated gamers",
       icon: "💰"
     }
   ];

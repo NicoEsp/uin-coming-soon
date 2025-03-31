@@ -83,17 +83,17 @@ const Index = () => {
           </p>
         </div>
         
-        <div className="my-8 sm:my-16 glow-effect">
+        {/* Product Carousel - Now positioned above the Coming Soon section */}
+        <div className="my-8 sm:my-12">
+          <ProductCarousel />
+        </div>
+        
+        <div className="my-8 sm:my-12 glow-effect">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 animate-pulse">
             <span className="gradient-text">Coming Soon</span>
           </h2>
           
-          {/* Product Carousel */}
-          <div className="my-8">
-            <ProductCarousel />
-          </div>
-          
-          <div className="relative my-6">
+          <div className="relative mt-6">
             <div className="h-1 bg-gradient-to-r from-uin-purple to-uin-magenta rounded-full w-48 mx-auto">
               <div className="h-1 bg-white rounded-full animate-pulse" style={{width: '30%'}}></div>
             </div>
