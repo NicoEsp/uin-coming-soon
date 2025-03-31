@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,14 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				uin: {
+					purple: '#8B5CF6',
+					'light-purple': '#E5DEFF',
+					'dark-purple': '#1A1F2C',
+					magenta: '#D946EF',
+					'bright-blue': '#1EAEDB',
+					black: '#121212'
 				}
 			},
 			borderRadius: {
@@ -84,12 +93,35 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'pulse-glow': {
+					'0%, 100%': { 
+						boxShadow: '0 0 15px 5px rgba(139, 92, 246, 0.3)' 
+					},
+					'50%': { 
+						boxShadow: '0 0 30px 10px rgba(139, 92, 246, 0.6)' 
+					},
+				},
+				'float': {
+					'0%, 100%': { 
+						transform: 'translateY(0)' 
+					},
+					'50%': { 
+						transform: 'translateY(-10px)' 
+					},
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'pulse-glow': 'pulse-glow 3s infinite',
+				'float': 'float 6s ease-in-out infinite'
+			},
+			backgroundImage: {
+				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+				'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+				'uin-grid': "url('/lovable-uploads/f927405f-2320-42d4-a8f4-e0f0cdcf7f70.png')"
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
