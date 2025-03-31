@@ -89,3 +89,22 @@
     background-position: 0% 50%;
   }
 }
+
+@keyframes fall {
+  0% {
+    transform: translateY(0) rotate(var(--rotation));
+    opacity: 0.8;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(100vh) rotate(calc(var(--rotation) + 360deg));
+    opacity: 0;
+  }
+}
+
+.animate-fall {
+  --rotation: 0deg;
+  animation: fall 3s ease-in forwards;
+}

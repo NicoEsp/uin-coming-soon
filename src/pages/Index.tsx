@@ -1,12 +1,16 @@
 
 import { Button } from "@/components/ui/button";
-import { Mail } from "lucide-react";
+import { Mail, Joystick } from "lucide-react";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
+import ProductCarousel from "@/components/ProductCarousel";
+import FallingJoystick from "@/components/FallingJoystick";
 
 const Index = () => {
   // Animation state is kept for the controller at the bottom
   const [animationPosition, setAnimationPosition] = useState({ x: 0, y: 0 });
+  const [fallingJoysticks, setFallingJoysticks] = useState<Array<{id: number, x: number, rotation: number}>>([]);
+  const [nextJoystickId, setNextJoystickId] = useState(0);
   
   // Animation effect for the controller element
   useEffect(() => {
@@ -27,14 +31,40 @@ const Index = () => {
     const cleanup = moveAnimation();
     return cleanup;
   }, []);
+
+  // Handle background click to add falling joysticks
+  const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Create a new joystick at random X position
+    const newJoystick = {
+      id: nextJoystickId,
+      x: e.clientX || Math.random() * window.innerWidth,
+      rotation: Math.random() * 360
+    };
+    
+    setFallingJoysticks(prev => [...prev, newJoystick]);
+    setNextJoystickId(prev => prev + 1);
+    
+    // Remove joystick after animation completes
+    setTimeout(() => {
+      setFallingJoysticks(prev => prev.filter(joystick => joystick.id !== newJoystick.id));
+    }, 3000);
+  };
   
   return (
-    <div className="bg-uin-black text-white min-h-screen flex flex-col justify-between relative overflow-hidden">
+    <div 
+      className="bg-uin-black text-white min-h-screen flex flex-col justify-between relative overflow-hidden"
+      onClick={handleBackgroundClick}
+    >
       {/* Background with subtle pattern */}
       <div className="absolute inset-0 bg-uin-black bg-uin-grid opacity-20"></div>
       
       {/* Purple gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-uin-purple/10 to-transparent"></div>
+      
+      {/* Falling joysticks */}
+      {fallingJoysticks.map(joystick => (
+        <FallingJoystick key={joystick.id} x={joystick.x} rotation={joystick.rotation} />
+      ))}
       
       {/* Header */}
       <Header />
@@ -44,7 +74,7 @@ const Index = () => {
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6 leading-tight">
             <span className="gradient-text">Level Up</span> Your{" "}
-            <br className="hidden xs:block" />Financial Apps{" "}
+            <br className="hidden xs:block" />Apps{" "}
             <br className="hidden xs:block" />with{" "}
             <br className="hidden xs:block" /><span className="gradient-text">Gaming</span> Power
           </h1>
@@ -57,6 +87,12 @@ const Index = () => {
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 animate-pulse">
             <span className="gradient-text">Coming Soon</span>
           </h2>
+          
+          {/* Product Carousel */}
+          <div className="my-8">
+            <ProductCarousel />
+          </div>
+          
           <div className="relative my-6">
             <div className="h-1 bg-gradient-to-r from-uin-purple to-uin-magenta rounded-full w-48 mx-auto">
               <div className="h-1 bg-white rounded-full animate-pulse" style={{width: '30%'}}></div>
