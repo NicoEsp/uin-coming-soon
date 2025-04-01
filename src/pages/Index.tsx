@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Mail, Joystick } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -78,7 +79,14 @@ const Index = () => {
       
       {/* Main content */}
       <div className="container mx-auto px-4 py-8 sm:py-16 relative z-10 max-w-4xl text-center flex-grow flex flex-col justify-center">
-        {/* Logo section removed */}
+        {/* Logo above title */}
+        <div className="mb-8 flex justify-center">
+          <img 
+            src="/lovable-uploads/47f345e2-aea8-4e20-b3ec-af9eacae0232.png" 
+            alt="UIN Logo" 
+            className="w-48 sm:w-64 md:w-72 h-auto mb-6"
+          />
+        </div>
         
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6 leading-tight">
