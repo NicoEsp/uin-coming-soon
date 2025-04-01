@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Mail, Joystick } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -79,10 +78,7 @@ const Index = () => {
       
       {/* Main content */}
       <div className="container mx-auto px-4 py-8 sm:py-16 relative z-10 max-w-4xl text-center flex-grow flex flex-col justify-center">
-        {/* Logo */}
-        <div className="mb-8 flex justify-center">
-          <AnimatedLogo className="w-24 h-24 sm:w-32 sm:h-32 mb-8 glow-effect" />
-        </div>
+        {/* Logo section removed */}
         
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6 leading-tight">

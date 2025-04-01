@@ -7,12 +7,8 @@ interface AnimatedLogoProps {
 
 const AnimatedLogo = ({ className = "" }: AnimatedLogoProps) => {
   return (
-    <div className={`relative ${className}`}>
-      <img 
-        src="/lovable-uploads/227adb21-ee17-4187-ba33-88184e60e7aa.png"
-        alt="UIN Logo" 
-        className="w-full h-auto"
-      />
+    <div className={`${className}`}>
+      {/* Logo has been removed as requested */}
     </div>
   );
 };
