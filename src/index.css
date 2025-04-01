@@ -131,3 +131,23 @@
 .logo-pulse {
   animation: pulse-glow 3s infinite ease-in-out, logo-fade 3s infinite ease-in-out;
 }
+
+/* Enhanced logo animation */
+@keyframes logo-pulsate {
+  0% {
+    transform: scale(0.95);
+    filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.4));
+  }
+  50% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.8));
+  }
+  100% {
+    transform: scale(0.95);
+    filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.4));
+  }
+}
+
+.animate-pulse-glow {
+  animation: logo-pulsate 3s infinite ease-in-out;
+}
