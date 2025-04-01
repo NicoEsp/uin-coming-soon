@@ -60,6 +60,18 @@ const Index = () => {
       {/* Purple gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-uin-purple/10 to-transparent"></div>
       
+      {/* Background logo */}
+      <div className="absolute opacity-5 pointer-events-none">
+        <div className="fixed right-0 bottom-0 w-full h-full flex items-center justify-center">
+          <img
+            src="/lovable-uploads/d53541aa-2de5-4e66-9d1f-5e932f682cb6.png"
+            alt="Background UIN Logo"
+            className="w-full max-w-[150vw] h-auto opacity-10"
+            style={{ transform: 'translate(25%, 25%) scale(2)' }}
+          />
+        </div>
+      </div>
+      
       {/* Falling joysticks */}
       {fallingJoysticks.map(joystick => (
         <FallingJoystick key={joystick.id} x={joystick.x} rotation={joystick.rotation} />
@@ -67,7 +79,7 @@ const Index = () => {
       
       {/* Main content */}
       <div className="container mx-auto px-4 py-8 sm:py-16 relative z-10 max-w-4xl text-center flex-grow flex flex-col justify-center">
-        {/* Animated Logo */}
+        {/* Logo */}
         <div className="mb-8 flex justify-center">
           <AnimatedLogo className="w-24 h-24 sm:w-32 sm:h-32 mb-8 glow-effect" />
         </div>
