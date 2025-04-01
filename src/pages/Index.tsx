@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Mail, Joystick } from "lucide-react";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
-import ProductCarousel from "@/components/ProductCarousel";
 import FallingJoystick from "@/components/FallingJoystick";
 
 const Index = () => {
@@ -83,25 +82,27 @@ const Index = () => {
           </p>
         </div>
         
-        {/* Product Carousel - Now positioned above the Coming Soon section */}
-        <div className="my-8 sm:my-12">
-          <ProductCarousel />
-        </div>
-        
-        <div className="my-8 sm:my-12 glow-effect">
+        <div className="my-6 sm:my-8 glow-effect">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 animate-pulse">
             <span className="gradient-text">Coming Soon</span>
           </h2>
           
-          <div className="relative mt-6">
+          <div className="relative mt-4 mb-6">
             <div className="h-1 bg-gradient-to-r from-uin-purple to-uin-magenta rounded-full w-48 mx-auto">
               <div className="h-1 bg-white rounded-full animate-pulse" style={{width: '30%'}}></div>
             </div>
           </div>
         </div>
         
-        {/* Centered button container */}
-        <div className="mt-8 sm:mt-16 flex justify-center">
+        {/* Contact Us text */}
+        <div className="mt-4 mb-2">
+          <h3 className="text-xl sm:text-2xl font-bold">
+            <span className="gradient-text">Contact Us</span>
+          </h3>
+        </div>
+        
+        {/* Email button */}
+        <div className="flex justify-center">
           <Button 
             variant="outline" 
             className="border-uin-purple text-white hover:bg-uin-purple/20 flex items-center gap-2"
