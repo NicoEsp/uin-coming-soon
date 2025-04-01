@@ -72,13 +72,23 @@ const Index = () => {
         </div>
       </div>
       
+      {/* Smartphone mockup image */}
+      <div className="absolute top-[50%] right-0 transform translate-y-[-50%] translate-x-[30%] z-10 opacity-70 pointer-events-none hidden lg:block">
+        <img 
+          src="/lovable-uploads/c8097de3-74f0-4192-97ea-8d9b2611ef7d.png" 
+          alt="Gaming App Mockup" 
+          className="w-auto h-[85vh] max-h-[800px]"
+          style={{ filter: "drop-shadow(0 0 20px rgba(139, 92, 246, 0.5))" }}
+        />
+      </div>
+      
       {/* Falling joysticks */}
       {fallingJoysticks.map(joystick => (
         <FallingJoystick key={joystick.id} x={joystick.x} rotation={joystick.rotation} />
       ))}
       
       {/* Main content */}
-      <div className="container mx-auto px-4 py-8 sm:py-16 relative z-10 max-w-4xl text-center flex-grow flex flex-col justify-center">
+      <div className="container mx-auto px-4 py-8 sm:py-16 relative z-20 max-w-4xl text-center flex-grow flex flex-col justify-center">
         {/* Logo above title */}
         <div className="mb-8 flex justify-center">
           <img 
