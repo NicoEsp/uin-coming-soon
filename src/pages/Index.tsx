@@ -4,12 +4,14 @@ import { Mail, Joystick } from "lucide-react";
 import { useEffect, useState } from "react";
 import FallingJoystick from "@/components/FallingJoystick";
 import AnimatedLogo from "@/components/AnimatedLogo";
+import AnimatedUinLogo from "@/components/AnimatedUinLogo";
 
 const Index = () => {
   // Animation state is kept for the controller at the bottom
   const [animationPosition, setAnimationPosition] = useState({ x: 0, y: 0 });
   const [fallingJoysticks, setFallingJoysticks] = useState<Array<{id: number, x: number, rotation: number}>>([]);
   const [nextJoystickId, setNextJoystickId] = useState(0);
+  const [logoAnimationComplete, setLogoAnimationComplete] = useState(false);
   
   // Animation effect for the controller element
   useEffect(() => {
@@ -91,26 +93,24 @@ const Index = () => {
       <div className="container mx-auto px-4 py-8 sm:py-16 relative z-20 max-w-4xl text-center flex-grow flex flex-col justify-center">
         {/* Logo above title */}
         <div className="mb-8 flex justify-center">
-          <img 
-            src="/lovable-uploads/47f345e2-aea8-4e20-b3ec-af9eacae0232.png" 
-            alt="UIN Logo" 
-            className="w-48 sm:w-64 md:w-72 h-auto mb-6"
+          <AnimatedUinLogo 
+            onAnimationComplete={() => setLogoAnimationComplete(true)}
           />
         </div>
         
         <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6 leading-tight">
+          <h1 className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6 leading-tight transition-opacity duration-500 ${logoAnimationComplete ? 'opacity-100' : 'opacity-0'}`}>
             <span className="gradient-text">Level Up</span> Your{" "}
             <br className="hidden xs:block" />Apps{" "}
             <br className="hidden xs:block" />with{" "}
             <br className="hidden xs:block" /><span className="gradient-text">Gaming</span> Power
           </h1>
-          <p className="text-base sm:text-lg md:text-xl mb-8 text-gray-300 max-w-2xl mx-auto px-4">
+          <p className={`text-base sm:text-lg md:text-xl mb-8 text-gray-300 max-w-2xl mx-auto px-4 transition-opacity duration-500 delay-300 ${logoAnimationComplete ? 'opacity-100' : 'opacity-0'}`}>
             UIN serves as a gateway to gamers, providing tools designed to attract, retain, and engage the Gen-Z community with powerful gaming solutions.
           </p>
         </div>
         
-        <div className="my-6 sm:my-8 glow-effect">
+        <div className={`my-6 sm:my-8 glow-effect transition-opacity duration-500 delay-500 ${logoAnimationComplete ? 'opacity-100' : 'opacity-0'}`}>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 animate-pulse">
             <span className="gradient-text">Coming Soon</span>
           </h2>
@@ -123,14 +123,14 @@ const Index = () => {
         </div>
         
         {/* Contact Us text */}
-        <div className="mt-4 mb-2">
+        <div className={`mt-4 mb-2 transition-opacity duration-500 delay-700 ${logoAnimationComplete ? 'opacity-100' : 'opacity-0'}`}>
           <h3 className="text-xl sm:text-2xl font-bold">
             <span className="gradient-text">Contact Us</span>
           </h3>
         </div>
         
         {/* Email button */}
-        <div className="flex justify-center">
+        <div className={`flex justify-center transition-opacity duration-500 delay-800 ${logoAnimationComplete ? 'opacity-100' : 'opacity-0'}`}>
           <Button 
             variant="outline" 
             className="border-uin-purple text-white hover:bg-uin-purple/20 flex items-center gap-2"
