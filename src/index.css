@@ -108,3 +108,26 @@
   --rotation: 0deg;
   animation: fall 3s ease-in forwards;
 }
+
+/* Logo animation keyframes */
+@keyframes pulse-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.8));
+  }
+}
+
+@keyframes logo-fade {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.logo-pulse {
+  animation: pulse-glow 3s infinite ease-in-out, logo-fade 3s infinite ease-in-out;
+}
