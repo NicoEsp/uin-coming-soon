@@ -37,14 +37,14 @@ const Footer = () => {
               <li><a href="#" className="hover:text-uin-purple">About</a></li>
               <li><a href="#" className="hover:text-uin-purple">Careers</a></li>
               <li><a href="#contact" className="hover:text-uin-purple">Contact</a></li>
-              <li><a href="#" className="hover:text-uin-purple">Privacy Policy</a></li>
+              <li><Link to="/privacy-policy" className="hover:text-uin-purple">Privacy Policy</Link></li>
             </ul>
           </div>
         </div>
         
         <div className="border-t border-uin-purple/20 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © 2023 UIN. All rights reserved.
+            © 2023 UIN. Todos los derechos reservados.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <a href="#" className="text-gray-400 hover:text-uin-purple">
