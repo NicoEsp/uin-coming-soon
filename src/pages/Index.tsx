@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { Mail, Joystick } from "lucide-react";
 import { useEffect, useState } from "react";
 import FallingJoystick from "@/components/FallingJoystick";
@@ -10,6 +11,23 @@ const Index = () => {
   const [animationPosition, setAnimationPosition] = useState({ x: 0, y: 0 });
   const [fallingJoysticks, setFallingJoysticks] = useState<Array<{id: number, x: number, rotation: number}>>([]);
   const [nextJoystickId, setNextJoystickId] = useState(0);
+  const [progress, setProgress] = useState(0);
+  
+  // Progress bar animation
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setProgress((oldProgress) => {
+        if (oldProgress >= 100) {
+          return 0;
+        }
+        return oldProgress + 1;
+      });
+    }, 50);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
   
   // Animation effect for the controller element
   useEffect(() => {
@@ -115,10 +133,8 @@ const Index = () => {
             <span className="gradient-text">Coming Soon</span>
           </h2>
           
-          <div className="relative mt-4 mb-6">
-            <div className="h-1 bg-gradient-to-r from-uin-purple to-uin-magenta rounded-full w-48 mx-auto">
-              <div className="h-1 bg-white rounded-full animate-pulse" style={{width: '30%'}}></div>
-            </div>
+          <div className="relative mt-4 mb-6 w-48 sm:w-64 md:w-80 mx-auto">
+            <Progress value={progress} className="h-2" />
           </div>
         </div>
         
