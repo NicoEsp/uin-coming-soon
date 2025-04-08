@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Mail, Joystick } from "lucide-react";
@@ -13,7 +12,7 @@ const Index = () => {
   const [nextJoystickId, setNextJoystickId] = useState(0);
   const [progress, setProgress] = useState(0);
   
-  // Progress bar animation
+  // Progress bar animation - reduced speed by 30% (from 50ms to 65ms)
   useEffect(() => {
     const timer = setInterval(() => {
       setProgress((oldProgress) => {
@@ -22,7 +21,7 @@ const Index = () => {
         }
         return oldProgress + 1;
       });
-    }, 50);
+    }, 65); // Changed from 50ms to 65ms (30% slower)
 
     return () => {
       clearInterval(timer);
