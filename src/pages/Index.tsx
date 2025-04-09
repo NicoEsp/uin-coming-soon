@@ -12,7 +12,7 @@ const Index = () => {
   const [nextJoystickId, setNextJoystickId] = useState(0);
   const [progress, setProgress] = useState(0);
   
-  // Progress bar animation - reduced speed by 30% (from 50ms to 65ms)
+  // Progress bar animation - reduced speed by 45% (from 50ms to 72.5ms)
   useEffect(() => {
     const timer = setInterval(() => {
       setProgress((oldProgress) => {
@@ -21,7 +21,7 @@ const Index = () => {
         }
         return oldProgress + 1;
       });
-    }, 65); // Changed from 50ms to 65ms (30% slower)
+    }, 72.5); // Changed from 50ms to 72.5ms (45% slower)
 
     return () => {
       clearInterval(timer);
@@ -137,10 +137,10 @@ const Index = () => {
           </div>
         </div>
         
-        {/* Contact Us text */}
+        {/* Updated Contact Us text */}
         <div className="mt-4 mb-2">
           <h3 className="text-xl sm:text-2xl font-bold">
-            <span className="gradient-text">Contact Us</span>
+            <span className="gradient-text">Want to know more about UIN products? Get in touch</span>
           </h3>
         </div>
         
