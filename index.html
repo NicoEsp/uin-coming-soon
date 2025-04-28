@@ -2,6 +2,16 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com https://cdn.gpteng.co 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' https://assets.uin.tech data: blob:; font-src 'self'; connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com; frame-src 'self' https://www.googletagmanager.com">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), camera=(), microphone=()">
+    
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -53,7 +63,7 @@
 
     <div id="root"></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module" integrity="sha384-cF2kZMkSA/Z5a/1X78nis0hlSiWNyZJb2TIwIRh4vuPw0JODmWlXQ3tnN03NQgVA" crossorigin="anonymous"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

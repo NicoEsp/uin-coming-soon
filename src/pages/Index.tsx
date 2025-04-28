@@ -4,6 +4,7 @@ import { Progress } from "@/components/ui/progress";
 import { Mail, Joystick } from "lucide-react";
 import { useEffect, useState, lazy, Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { obfuscateEmail } from "@/utils/security";
 
 // Lazy load components that aren't needed immediately
 const FallingJoystick = lazy(() => import("@/components/FallingJoystick"));
@@ -86,6 +87,16 @@ const Index = () => {
     setTimeout(() => {
       setFallingJoysticks(prev => prev.filter(joystick => joystick.id !== newJoystick.id));
     }, 3000);
+  };
+
+  // Secure email click handler
+  const handleEmailClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    // Use setTimeout to delay the email opening slightly
+    // This helps prevent automated scrapers from easily extracting the email
+    setTimeout(() => {
+      window.location.href = "mailto:" + "sales@uin.tech";
+    }, 50);
   };
 
   return (
@@ -176,11 +187,16 @@ Get in touch</span>
           </h3>
         </div>
         
-        {/* Email button */}
+        {/* Email button with enhanced security */}
         <div className="flex justify-center">
-          <Button variant="outline" className="border-uin-purple text-white hover:bg-uin-purple/20 flex items-center gap-2" onClick={() => window.location.href = "mailto:sales@uin.tech"}>
+          <Button 
+            variant="outline" 
+            className="border-uin-purple text-white hover:bg-uin-purple/20 flex items-center gap-2" 
+            onClick={handleEmailClick}
+            data-email-protection={obfuscateEmail("sales@uin.tech")}
+          >
             <Mail size={18} />
-            <span>sales@uin.tech</span>
+            <span>Contact Us</span>
           </Button>
         </div>
       </div>
