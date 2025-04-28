@@ -1,12 +1,7 @@
 
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-
 const PrivacyPolicy = () => {
   return (
     <div className="bg-uin-black text-white min-h-screen flex flex-col">
-      <Navbar />
-      
       <main className="flex-grow container mx-auto px-4 py-20 md:py-24">
         <div className="max-w-4xl mx-auto bg-uin-black/50 p-8 rounded-lg border border-uin-purple/20 backdrop-blur-md">
           <h1 className="text-3xl sm:text-4xl font-bold mb-8 gradient-text">Privacy Policy</h1>
@@ -95,8 +90,6 @@ const PrivacyPolicy = () => {
           </div>
         </div>
       </main>
-      
-      <Footer />
     </div>
   );
 };
