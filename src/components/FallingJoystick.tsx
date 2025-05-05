@@ -14,7 +14,7 @@ const FallingJoystick: React.FC<FallingJoystickProps> = memo(({ x, rotation }) =
       className="absolute top-0 z-20 text-uin-purple/70 animate-fall"
       style={{ 
         left: `${x}px`, 
-        '--rotation': `${rotation}deg` as any,
+        transform: `rotate(${rotation}deg)`,
         willChange: 'transform'
       }}
     >
