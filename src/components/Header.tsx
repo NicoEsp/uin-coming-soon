@@ -7,13 +7,7 @@ const Header = () => {
       <div className="container-custom">
         <div className="flex justify-between items-center">
           <div className="flex justify-start">
-            <img 
-              src="/lovable-uploads/d2d2157f-75e8-4cd9-b5aa-4c2d0fa9b026.png" 
-              alt="UIN Logo" 
-              className="h-8 sm:h-9 md:h-10 w-auto"
-              width="40"
-              height="40"
-            />
+            {/* Logo removed from here as it's already in Navbar */}
           </div>
           
           <nav className="hidden md:flex space-x-6 text-sm font-medium">
