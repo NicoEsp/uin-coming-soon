@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { memo } from 'react';
 import { Joystick } from 'lucide-react';
 
 interface FallingJoystickProps {
@@ -7,19 +7,22 @@ interface FallingJoystickProps {
   rotation: number;
 }
 
-const FallingJoystick: React.FC<FallingJoystickProps> = ({ x, rotation }) => {
+// Memoize the component to prevent unnecessary re-renders
+const FallingJoystick: React.FC<FallingJoystickProps> = memo(({ x, rotation }) => {
   return (
     <div 
       className="absolute top-0 z-20 text-uin-purple/70 animate-fall"
       style={{ 
         left: `${x}px`, 
-        transform: `rotate(${rotation}deg)`,
-        animation: 'fall 3s linear forwards'
+        '--rotation': `${rotation}deg` as any,
+        willChange: 'transform'
       }}
     >
       <Joystick size={32} />
     </div>
   );
-};
+});
+
+FallingJoystick.displayName = 'FallingJoystick';
 
 export default FallingJoystick;

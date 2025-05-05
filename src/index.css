@@ -53,19 +53,37 @@
 
   body {
     @apply bg-uin-black text-foreground;
+    text-rendering: optimizeSpeed;
   }
   
+  /* Optimized glow effect with reduced shadow impact */
   .glow-effect {
-    filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.7));
+    filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.5));
   }
   
   .gradient-text {
     @apply text-transparent bg-clip-text bg-gradient-to-r from-uin-purple to-uin-magenta;
+    will-change: transform;
+  }
+  
+  /* Add will-change for elements that animate */
+  .animate-float, .logo-pulse, .animate-pulse-glow {
+    will-change: transform, opacity;
+  }
+  
+  /* Optimize image rendering */
+  img {
+    image-rendering: auto;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
   }
 }
 
+/* Optimize card hover with hardware acceleration */
 .card-hover {
-  transition: all 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  will-change: transform, box-shadow;
+  backface-visibility: hidden;
 }
 
 .card-hover:hover {
@@ -73,9 +91,11 @@
   box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.4);
 }
 
+/* Optimized background animation */
 .animated-bg {
   background-size: 400% 400%;
   animation: gradient 15s ease infinite;
+  will-change: background-position;
 }
 
 @keyframes gradient {
@@ -90,64 +110,64 @@
   }
 }
 
+/* Optimized fall animation */
 @keyframes fall {
   0% {
-    transform: translateY(0) rotate(var(--rotation));
+    transform: translateY(0) rotate(var(--rotation, 0deg));
     opacity: 0.8;
   }
   80% {
-    opacity: 0.8;
+    opacity: 0.6;
   }
   100% {
-    transform: translateY(100vh) rotate(calc(var(--rotation) + 360deg));
+    transform: translateY(100vh) rotate(calc(var(--rotation, 0deg) + 360deg));
     opacity: 0;
   }
 }
 
 .animate-fall {
-  --rotation: 0deg;
   animation: fall 3s ease-in forwards;
 }
 
-/* Logo animation keyframes */
+/* Optimized logo animation keyframes with reduced intensity */
 @keyframes pulse-glow {
   0%, 100% {
-    filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.375)); /* Reduced by 25% from 0.5 */
+    filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.3));
   }
   50% {
-    filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.6)); /* Reduced by 25% from 0.8 */
+    filter: drop-shadow(0 0 12px rgba(139, 92, 246, 0.5));
   }
 }
 
 @keyframes logo-fade {
   0%, 100% {
-    opacity: 0.75; /* Reduced by 25% from 1.0 */
+    opacity: 0.75;
   }
   50% {
-    opacity: 0.525; /* Reduced by 25% from 0.7 */
+    opacity: 0.6;
   }
 }
 
 .logo-pulse {
-  animation: pulse-glow 3s infinite ease-in-out, logo-fade 3s infinite ease-in-out;
+  animation: pulse-glow 4s infinite ease-in-out, logo-fade 4s infinite ease-in-out;
 }
 
-/* Enhanced logo animation */
+/* Optimized and smoother logo animation */
 @keyframes logo-pulsate {
   0% {
-    transform: scale(0.95);
-    filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.3)); /* Reduced by 25% from 0.4 */
+    transform: scale(0.97);
+    filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.2));
   }
   50% {
-    transform: scale(1.05);
-    filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.6)); /* Reduced by 25% from 0.8 */
+    transform: scale(1.03);
+    filter: drop-shadow(0 0 14px rgba(139, 92, 246, 0.4));
   }
   100% {
-    transform: scale(0.95);
-    filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.3)); /* Reduced by 25% from 0.4 */
+    transform: scale(0.97);
+    filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.2));
   }
 }
 
 .animate-pulse-glow {
-  animation: logo-pulsate 3s infinite ease-in-out;
+  animation: logo-pulsate 4s infinite ease-in-out;
 }

@@ -1,3 +1,11 @@
+
+# UIN Tech - Optimized robots.txt
+# https://uin.tech/
+
+User-agent: *
+Allow: /
+
+# Allow specific crawlers with higher priority
 User-agent: Googlebot
 Allow: /
 
@@ -10,5 +18,8 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
-Allow: /
+# Sitemap location
+# Sitemap: https://uin.tech/sitemap.xml
+
+# Crawl delay to prevent server overload
+Crawl-delay: 1
