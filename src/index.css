@@ -5,36 +5,38 @@
 
 @layer base {
   :root {
-    --background: 260 10% 5%;
-    --foreground: 0 0% 95%;
+    /* Updated color palette to match Oxyco light theme */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
 
-    --card: 260 10% 8%;
-    --card-foreground: 0 0% 95%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
 
-    --popover: 260 10% 8%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
 
-    --primary: 265 83% 62%;
+    --primary: 261 51% 51%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 260 10% 15%;
-    --secondary-foreground: 0 0% 95%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
 
-    --muted: 260 10% 15%;
-    --muted-foreground: 0 0% 70%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
 
     --accent: 264 100% 75%;
-    --accent-foreground: 0 0% 100%;
+    --accent-foreground: 240 5.9% 10%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 260 10% 20%;
-    --input: 260 10% 20%;
-    --ring: 265 83% 62%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 261 51% 51%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
+    /* Sidebar theme - keeping the darker colors for contrast */
     --sidebar-background: 260 10% 5%;
     --sidebar-foreground: 0 0% 95%;
     --sidebar-primary: 265 83% 62%;
@@ -52,62 +54,107 @@
   }
 
   body {
-    @apply bg-uin-black text-foreground;
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
     text-rendering: optimizeSpeed;
   }
   
-  /* Optimized glow effect with reduced shadow impact */
-  .glow-effect {
-    filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.5));
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-medium leading-tight tracking-tight;
   }
   
+  h1 {
+    @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl;
+  }
+  
+  h2 {
+    @apply text-3xl sm:text-4xl md:text-5xl;
+  }
+  
+  h3 {
+    @apply text-2xl sm:text-3xl;
+  }
+  
+  p {
+    @apply leading-relaxed text-muted-foreground;
+  }
+  
+  /* Clean gradient text effect */
   .gradient-text {
-    @apply text-transparent bg-clip-text bg-gradient-to-r from-uin-purple to-uin-magenta;
-    will-change: transform;
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent;
   }
   
-  /* Add will-change for elements that animate */
-  .animate-float, .logo-pulse, .animate-pulse-glow {
-    will-change: transform, opacity;
+  /* Subtle glow effect */
+  .glow-effect {
+    filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.3));
   }
   
-  /* Optimize image rendering */
-  img {
-    image-rendering: auto;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
+  /* Container styles */
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  /* Section padding */
+  .section-padding {
+    @apply py-16 sm:py-24 md:py-32;
   }
 }
 
-/* Optimize card hover with hardware acceleration */
-.card-hover {
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-  will-change: transform, box-shadow;
-  backface-visibility: hidden;
-}
-
-.card-hover:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.4);
-}
-
-/* Optimized background animation */
-.animated-bg {
-  background-size: 400% 400%;
-  animation: gradient 15s ease infinite;
-  will-change: background-position;
-}
-
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
+/* Modernized animations */
+@keyframes subtle-float {
+  0%, 100% {
+    transform: translateY(0);
   }
   50% {
-    background-position: 100% 50%;
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
   }
   100% {
-    background-position: 0% 50%;
+    opacity: 1;
+    transform: translateY(0);
   }
+}
+
+@keyframes reveal-width {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+/* Button hover effect */
+.button-hover {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.button-hover:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s ease-out;
+  z-index: -1;
+}
+
+.button-hover:hover:after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 /* Optimized fall animation */
@@ -129,45 +176,25 @@
   animation: fall 3s ease-in forwards;
 }
 
-/* Optimized logo animation keyframes with reduced intensity */
-@keyframes pulse-glow {
-  0%, 100% {
-    filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.3));
-  }
-  50% {
-    filter: drop-shadow(0 0 12px rgba(139, 92, 246, 0.5));
-  }
+.animate-float {
+  animation: subtle-float 4s ease-in-out infinite;
 }
 
-@keyframes logo-fade {
-  0%, 100% {
-    opacity: 0.75;
-  }
-  50% {
-    opacity: 0.6;
-  }
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
 }
 
-.logo-pulse {
-  animation: pulse-glow 4s infinite ease-in-out, logo-fade 4s infinite ease-in-out;
+/* Card styles */
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-md;
 }
 
-/* Optimized and smoother logo animation */
-@keyframes logo-pulsate {
-  0% {
-    transform: scale(0.97);
-    filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.2));
-  }
-  50% {
-    transform: scale(1.03);
-    filter: drop-shadow(0 0 14px rgba(139, 92, 246, 0.4));
-  }
-  100% {
-    transform: scale(0.97);
-    filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.2));
-  }
+/* Divider style */
+.divider {
+  @apply w-20 h-0.5 bg-primary my-6;
 }
 
-.animate-pulse-glow {
-  animation: logo-pulsate 4s infinite ease-in-out;
+/* Image styling */
+.img-shadow {
+  @apply shadow-lg rounded-md;
 }

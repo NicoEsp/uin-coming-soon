@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <!-- Content Security Policy -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com https://cdn.gpteng.co 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' https://assets.uin.tech data: blob:; font-src 'self'; connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com; frame-src 'self' https://www.googletagmanager.com">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.googletagmanager.com https://cdn.gpteng.co 'unsafe-inline'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://assets.uin.tech data: blob:; connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com; frame-src 'self' https://www.googletagmanager.com">
     
     <!-- Security Headers -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
@@ -18,7 +18,15 @@
     <meta name="description" content="UIN serves as a gateway to gamers, providing tools designed to attract, retain, and engage the Gen-Z community." />
     <meta name="author" content="UIN" />
     <link rel="icon" href="https://assets.uin.tech/logo.svg" type="image/svg+xml">
-
+    
+    <!-- Add new fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Cabinet Grotesk font (similar to Oxyco's font) -->
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@700,500,400&display=swap">
+    
     <!-- Preload critical assets -->
     <link rel="preload" href="/lovable-uploads/47f345e2-aea8-4e20-b3ec-af9eacae0232.png" as="image" fetchpriority="high" />
     <link rel="preload" href="/src/index.css" as="style" />
