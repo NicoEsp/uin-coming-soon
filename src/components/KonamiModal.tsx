@@ -44,14 +44,7 @@ const KonamiModal = ({ open, onOpenChange }: KonamiModalProps) => {
   return (
     <Dialog 
       open={open} 
-      onOpenChange={(newOpenState) => {
-        // Only allow closing via the X button
-        // If trying to close (newOpenState is false) and currently open, prevent it
-        if (!newOpenState && open) {
-          return;
-        }
-        onOpenChange(newOpenState);
-      }}
+      onOpenChange={onOpenChange}
     >
       <DialogContent 
         className="bg-uin-dark-purple border border-uin-purple/30 text-white max-w-md"
