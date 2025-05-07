@@ -1,3 +1,4 @@
+
 import React, { useRef, useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -88,7 +89,7 @@ const KonamiModal = ({ open, onOpenChange }: KonamiModalProps) => {
           </Button>
           
           <p className="text-sm text-uin-purple font-medium text-center">
-            Send this code to sales@uin.tech for a discount in Gaming Hub product Set Up Fee
+            Send this code to sales@uin.tech for a discount in the Set up fee of Gaming Hub
           </p>
         </div>
       </DialogContent>
