@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Mail, Joystick, AlertTriangle } from "lucide-react";
-import { useEffect, useState, lazy, Suspense, memo, useCallback } from "react";
+import { useEffect, useState, lazy, Suspense, memo, useCallback, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { obfuscateEmail } from "@/utils/security";
 import { useToast } from "@/hooks/use-toast";
@@ -66,10 +66,13 @@ const GameMockup = memo(() => (
 
 const Index = () => {
   // Konami code related state and constants
-  const KONAMI_CODE = "↑↑↓↓←→←→BA";
+  const KONAMI_CODE = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+  const KONAMI_CODE_DISPLAY = "↑↑↓↓←→←→BA";
   const [codeInput, setCodeInput] = useState("");
+  const [keySequence, setKeySequence] = useState<string[]>([]);
   const [showKonamiModal, setShowKonamiModal] = useState(false);
   const [konamiActive, setKonamiActive] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   // Reduce animation complexity to improve performance
@@ -103,6 +106,63 @@ const Index = () => {
       setKonamiActive(true);
     }
   }, []);
+
+  // Add keyboard event listener for Konami code
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Focus the input when any key is pressed
+      if (inputRef.current && document.activeElement !== inputRef.current) {
+        inputRef.current.focus();
+      }
+      
+      // Track the key sequence
+      const key = e.key.toLowerCase();
+      const isArrowKey = key === "arrowup" || key === "arrowdown" || key === "arrowleft" || key === "arrowright";
+      const isValidKey = isArrowKey || key === "a" || key === "b";
+      
+      if (isValidKey) {
+        // Track attempt with the actual key pressed
+        if (typeof window !== 'undefined' && window.dataLayer) {
+          window.dataLayer.push({
+            event: 'konami_key_press',
+            key: e.key,
+            timestamp: new Date().toISOString(),
+          });
+        }
+        
+        // Update the key sequence
+        const newSequence = [...keySequence, e.key];
+        if (newSequence.length > KONAMI_CODE.length) {
+          newSequence.shift(); // Keep only the last N keys
+        }
+        setKeySequence(newSequence);
+        
+        // Update the display text in the input field
+        let displayText = "";
+        newSequence.forEach(k => {
+          if (k === "ArrowUp") displayText += "↑";
+          else if (k === "ArrowDown") displayText += "↓";
+          else if (k === "ArrowLeft") displayText += "←";
+          else if (k === "ArrowRight") displayText += "→";
+          else displayText += k.toUpperCase();
+        });
+        setCodeInput(displayText);
+        
+        // Check if the sequence matches the Konami code
+        if (newSequence.length === KONAMI_CODE.length) {
+          const isMatch = newSequence.every((k, i) => k === KONAMI_CODE[i]);
+          if (isMatch) {
+            validateKonamiCode(displayText);
+          }
+        }
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [keySequence]);
 
   // Optimize progress bar animation with requestAnimationFrame instead of setInterval
   useEffect(() => {
@@ -151,7 +211,7 @@ const Index = () => {
 
   // Handle Konami code input validation
   const validateKonamiCode = useCallback((input: string) => {
-    if (input === KONAMI_CODE) {
+    if (input === KONAMI_CODE_DISPLAY) {
       // Store konami found in localStorage
       localStorage.setItem('konami_found', 'true');
       setKonamiActive(true);
@@ -182,51 +242,37 @@ const Index = () => {
         );
       }, 5000);
       
+      // Reset the key sequence
+      setKeySequence([]);
+      
       return true;
     }
-    return false;
-  }, [KONAMI_CODE, nextJoystickId]);
-
-  // Handle Konami code input change
-  const handleKonamiInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value;
-    setCodeInput(input);
     
-    // Track attempt
-    if (typeof window !== 'undefined' && window.dataLayer) {
-      window.dataLayer.push({
-        event: 'konami_code_attempt',
-        input: input,
-        timestamp: new Date().toISOString(),
-      });
-    }
-  }, []);
-
-  // Handle Konami code input submission
-  const handleKonamiSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const isValid = validateKonamiCode(codeInput);
-    
-    if (!isValid) {
-      // Show error toast and track error
+    // If entered full sequence but incorrect
+    if (input.length === KONAMI_CODE_DISPLAY.length && input !== KONAMI_CODE_DISPLAY) {
+      // Show error toast
       toast({
         title: "Invalid Code",
         description: "That's not the secret code. Try again!",
         variant: "destructive",
       });
       
+      // Track error
       if (typeof window !== 'undefined' && window.dataLayer) {
         window.dataLayer.push({
           event: 'konami_code_error',
-          input: codeInput,
+          input: input,
           timestamp: new Date().toISOString(),
         });
       }
       
       // Clear input after error
       setCodeInput("");
+      setKeySequence([]);
     }
-  }, [codeInput, validateKonamiCode, toast]);
+    
+    return false;
+  }, [KONAMI_CODE_DISPLAY, nextJoystickId, toast]);
 
   // Limit joystick animations to reduce CPU usage
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -334,21 +380,22 @@ Get in touch</span>
         
         {/* Secret Konami code input */}
         <div className="mt-6 flex justify-center">
-          <form onSubmit={handleKonamiSubmit} className="relative w-48 sm:w-64 transition-opacity duration-300 opacity-60 hover:opacity-100 focus-within:opacity-100">
+          <div className="relative w-48 sm:w-64 transition-opacity duration-300 opacity-60 hover:opacity-100 focus-within:opacity-100">
             <Input
+              ref={inputRef}
               type="text"
-              placeholder="Enter secret code..."
+              placeholder="Use arrow keys..."
               value={codeInput}
-              onChange={handleKonamiInputChange}
               className="bg-uin-black/60 border-uin-purple/30 text-sm text-white placeholder-gray-500 focus:border-uin-purple/50"
               aria-label="Secret code input"
+              readOnly
             />
             {konamiActive && (
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-uin-purple">
                 <Joystick size={16} className="animate-pulse" />
               </div>
             )}
-          </form>
+          </div>
         </div>
         
         {/* Konami Modal */}
