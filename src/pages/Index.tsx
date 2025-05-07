@@ -418,7 +418,7 @@ Get in touch</span>
         <div className="flex justify-center">
           <Button 
             variant="outline" 
-            className="border-uin-purple text-white hover:bg-uin-purple/20 flex items-center gap-2" 
+            className="border-uin-purple text-white bg-uin-purple/30 hover:bg-uin-purple/50" 
             onClick={handleEmailClick}
             data-email-protection={obfuscateEmail("sales@uin.tech")}
           >

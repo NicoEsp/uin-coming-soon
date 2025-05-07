@@ -93,6 +93,10 @@ const KonamiModal = ({ open, onOpenChange }: KonamiModalProps) => {
             <br />
             <span className="text-xs">This code is valid for 7 days.</span>
           </p>
+          
+          <p className="text-sm text-uin-purple font-medium text-center">
+            Send this code to sales@uin.tech for a discount in Gaming Hub product Set Up Fee
+          </p>
         </div>
       </DialogContent>
     </Dialog>
