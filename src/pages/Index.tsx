@@ -138,9 +138,35 @@ const Index = () => {
   };
   
   // Handle input key down for Enter validation
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    // Handle Enter key for validation
-    if (e.key === "Enter") {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Handle arrow keys and other special keys
+    if (e.key === "ArrowUp" || e.key === "ArrowDown" || 
+        e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      e.preventDefault(); // Prevent default behavior (cursor movement)
+      
+      // Map arrow keys to their corresponding symbols
+      let arrowSymbol = "";
+      switch (e.key) {
+        case "ArrowUp": arrowSymbol = "↑"; break;
+        case "ArrowDown": arrowSymbol = "↓"; break;
+        case "ArrowLeft": arrowSymbol = "←"; break;
+        case "ArrowRight": arrowSymbol = "→"; break;
+      }
+      
+      // Only add if we're under the character limit
+      if (codeInput.length < 10) {
+        setCodeInput(prev => prev + arrowSymbol);
+      }
+
+      // Track attempt with arrow key
+      if (typeof window !== 'undefined' && window.dataLayer) {
+        window.dataLayer.push({
+          event: 'konami_arrow_key_press',
+          key: e.key,
+          timestamp: new Date().toISOString(),
+        });
+      }
+    } else if (e.key === "Enter") {
       e.preventDefault();
       validateKonamiCode(codeInput);
       
@@ -152,8 +178,12 @@ const Index = () => {
           timestamp: new Date().toISOString(),
         });
       }
+    } else if (e.key === "Backspace") {
+      // Let the default handler work for backspace
+    } else if (e.key.length === 1 && codeInput.length < 10) {
+      // For regular single character keys, allow default behavior
     }
-  };
+  }, [codeInput, validateKonamiCode]);
 
   // Optimize progress bar animation with requestAnimationFrame instead of setInterval
   useEffect(() => {
@@ -368,7 +398,7 @@ Get in touch</span>
           </Button>
         </div>
         
-        {/* Secret Konami code input - updated to accept any characters */}
+        {/* Secret Konami code input - updated to accept arrows and any characters */}
         <div className="mt-6 flex justify-center">
           <div className="relative w-48 sm:w-64 transition-opacity duration-300 opacity-60 hover:opacity-100 focus-within:opacity-100">
             <Input
