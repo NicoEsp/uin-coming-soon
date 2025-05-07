@@ -1,13 +1,15 @@
-
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Mail } from "lucide-react";
-import { useEffect, useState, lazy, Suspense, memo } from "react";
+import { Mail, Joystick, AlertTriangle } from "lucide-react";
+import { useEffect, useState, lazy, Suspense, memo, useCallback } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { obfuscateEmail } from "@/utils/security";
+import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
 
 // Lazy load components that aren't needed immediately
 const FallingJoystick = lazy(() => import("@/components/FallingJoystick"));
+const KonamiModal = lazy(() => import("@/components/KonamiModal"));
 
 // Memoize static components to prevent unnecessary re-renders
 const MainLogo = memo(() => (
@@ -63,6 +65,13 @@ const GameMockup = memo(() => (
 ));
 
 const Index = () => {
+  // Konami code related state and constants
+  const KONAMI_CODE = "↑↑↓↓←→←→BA";
+  const [codeInput, setCodeInput] = useState("");
+  const [showKonamiModal, setShowKonamiModal] = useState(false);
+  const [konamiActive, setKonamiActive] = useState(false);
+  const { toast } = useToast();
+
   // Reduce animation complexity to improve performance
   const [animationPosition, setAnimationPosition] = useState({
     x: 0,
@@ -84,6 +93,14 @@ const Index = () => {
     } else {
       window.addEventListener('load', () => setIsLoaded(true));
       return () => window.removeEventListener('load', () => setIsLoaded(true));
+    }
+  }, []);
+
+  // Check if user already found the konami code
+  useEffect(() => {
+    const foundKonami = localStorage.getItem('konami_found');
+    if (foundKonami) {
+      setKonamiActive(true);
     }
   }, []);
 
@@ -131,6 +148,85 @@ const Index = () => {
     animationFrameId = requestAnimationFrame(moveAnimation);
     return () => cancelAnimationFrame(animationFrameId);
   }, [isLoaded]);
+
+  // Handle Konami code input validation
+  const validateKonamiCode = useCallback((input: string) => {
+    if (input === KONAMI_CODE) {
+      // Store konami found in localStorage
+      localStorage.setItem('konami_found', 'true');
+      setKonamiActive(true);
+      setShowKonamiModal(true);
+      
+      // Track successful konami code entry
+      if (typeof window !== 'undefined' && window.dataLayer) {
+        window.dataLayer.push({
+          event: 'konami_code_success',
+          timestamp: new Date().toISOString(),
+        });
+      }
+      
+      // Create a celebratory animation with more joysticks
+      const celebrationJoysticks = Array.from({ length: 20 }, (_, i) => ({
+        id: nextJoystickId + i,
+        x: Math.random() * window.innerWidth,
+        rotation: Math.random() * 360
+      }));
+      
+      setFallingJoysticks(prev => [...prev, ...celebrationJoysticks]);
+      setNextJoystickId(prev => prev + 20);
+      
+      // Clean up celebration joysticks after animation
+      setTimeout(() => {
+        setFallingJoysticks(prev => 
+          prev.filter(joystick => !celebrationJoysticks.some(cj => cj.id === joystick.id))
+        );
+      }, 5000);
+      
+      return true;
+    }
+    return false;
+  }, [KONAMI_CODE, nextJoystickId]);
+
+  // Handle Konami code input change
+  const handleKonamiInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value;
+    setCodeInput(input);
+    
+    // Track attempt
+    if (typeof window !== 'undefined' && window.dataLayer) {
+      window.dataLayer.push({
+        event: 'konami_code_attempt',
+        input: input,
+        timestamp: new Date().toISOString(),
+      });
+    }
+  }, []);
+
+  // Handle Konami code input submission
+  const handleKonamiSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const isValid = validateKonamiCode(codeInput);
+    
+    if (!isValid) {
+      // Show error toast and track error
+      toast({
+        title: "Invalid Code",
+        description: "That's not the secret code. Try again!",
+        variant: "destructive",
+      });
+      
+      if (typeof window !== 'undefined' && window.dataLayer) {
+        window.dataLayer.push({
+          event: 'konami_code_error',
+          input: codeInput,
+          timestamp: new Date().toISOString(),
+        });
+      }
+      
+      // Clear input after error
+      setCodeInput("");
+    }
+  }, [codeInput, validateKonamiCode, toast]);
 
   // Limit joystick animations to reduce CPU usage
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -235,6 +331,30 @@ Get in touch</span>
             <span>Contact Us</span>
           </Button>
         </div>
+        
+        {/* Secret Konami code input */}
+        <div className="mt-6 flex justify-center">
+          <form onSubmit={handleKonamiSubmit} className="relative w-48 sm:w-64 transition-opacity duration-300 opacity-60 hover:opacity-100 focus-within:opacity-100">
+            <Input
+              type="text"
+              placeholder="Enter secret code..."
+              value={codeInput}
+              onChange={handleKonamiInputChange}
+              className="bg-uin-black/60 border-uin-purple/30 text-sm text-white placeholder-gray-500 focus:border-uin-purple/50"
+              aria-label="Secret code input"
+            />
+            {konamiActive && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-uin-purple">
+                <Joystick size={16} className="animate-pulse" />
+              </div>
+            )}
+          </form>
+        </div>
+        
+        {/* Konami Modal */}
+        <Suspense fallback={null}>
+          <KonamiModal open={showKonamiModal} onOpenChange={setShowKonamiModal} />
+        </Suspense>
       </div>
       
       {/* Game controller graphic - only render when loaded and using memoized component */}
