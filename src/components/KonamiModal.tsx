@@ -42,8 +42,22 @@ const KonamiModal = ({ open, onOpenChange }: KonamiModalProps) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-uin-dark-purple border border-uin-purple/30 text-white max-w-md">
+    <Dialog 
+      open={open} 
+      onOpenChange={(newOpenState) => {
+        // Only allow closing via the X button
+        // If trying to close (newOpenState is false) and currently open, prevent it
+        if (!newOpenState && open) {
+          return;
+        }
+        onOpenChange(newOpenState);
+      }}
+    >
+      <DialogContent 
+        className="bg-uin-dark-purple border border-uin-purple/30 text-white max-w-md"
+        onPointerDownOutside={(e) => e.preventDefault()}
+        onEscapeKeyDown={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
             <div className="bg-uin-purple rounded-full p-3 animate-bounce">
