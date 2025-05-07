@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -87,12 +86,6 @@ const KonamiModal = ({ open, onOpenChange }: KonamiModalProps) => {
               </>
             )}
           </Button>
-          
-          <p className="text-sm text-gray-400 text-center mt-4">
-            Use this code at checkout to receive 10% off your next purchase.
-            <br />
-            <span className="text-xs">This code is valid for 7 days.</span>
-          </p>
           
           <p className="text-sm text-uin-purple font-medium text-center">
             Send this code to sales@uin.tech for a discount in Gaming Hub product Set Up Fee
