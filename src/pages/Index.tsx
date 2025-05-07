@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Mail, Joystick, AlertTriangle } from "lucide-react";
@@ -115,6 +116,54 @@ const Index = () => {
         inputRef.current.focus();
       }
       
+      // Handle backspace and delete keys
+      if (e.key === "Backspace" || e.key === "Delete") {
+        // Track deletion event
+        if (typeof window !== 'undefined' && window.dataLayer) {
+          window.dataLayer.push({
+            event: 'konami_key_delete',
+            timestamp: new Date().toISOString(),
+          });
+        }
+        
+        // Remove the last character from the sequence
+        const newSequence = [...keySequence];
+        if (newSequence.length > 0) {
+          newSequence.pop();
+          setKeySequence(newSequence);
+          
+          // Update the display text
+          let displayText = "";
+          newSequence.forEach(k => {
+            if (k === "ArrowUp") displayText += "↑";
+            else if (k === "ArrowDown") displayText += "↓";
+            else if (k === "ArrowLeft") displayText += "←";
+            else if (k === "ArrowRight") displayText += "→";
+            else displayText += k.toUpperCase();
+          });
+          setCodeInput(displayText);
+        }
+        
+        return;
+      }
+      
+      // Handle Enter key for validation
+      if (e.key === "Enter") {
+        e.preventDefault();
+        validateKonamiCode(codeInput);
+        
+        // Track Enter key event
+        if (typeof window !== 'undefined' && window.dataLayer) {
+          window.dataLayer.push({
+            event: 'konami_code_validate',
+            input: codeInput,
+            timestamp: new Date().toISOString(),
+          });
+        }
+        
+        return;
+      }
+      
       // Track the key sequence
       const key = e.key.toLowerCase();
       const isArrowKey = key === "arrowup" || key === "arrowdown" || key === "arrowleft" || key === "arrowright";
@@ -162,7 +211,7 @@ const Index = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [keySequence]);
+  }, [keySequence, codeInput]);
 
   // Optimize progress bar animation with requestAnimationFrame instead of setInterval
   useEffect(() => {
@@ -389,7 +438,16 @@ Get in touch</span>
               className="bg-uin-black/60 border-uin-purple/30 text-sm text-white placeholder-gray-500 focus:border-uin-purple/50"
               aria-label="Secret code input"
               readOnly
+              onKeyDown={(e) => {
+                // Prevent default behavior for arrow keys to avoid cursor movement
+                if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+                  e.preventDefault();
+                }
+              }}
             />
+            <div className="mt-1 text-xs text-gray-400">
+              Press Enter to validate code
+            </div>
             {konamiActive && (
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-uin-purple">
                 <Joystick size={16} className="animate-pulse" />
