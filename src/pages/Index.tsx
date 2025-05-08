@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Mail, Joystick, AlertTriangle } from "lucide-react";
@@ -107,83 +108,110 @@ const Index = () => {
     }
   }, []);
 
-  // Add keyboard event listener for Konami code - no longer needed as we're handling direct input
+  // Add keyboard event listener for Konami code
   useEffect(() => {
-    // Check if the sequence matches the Konami code for automatic validation
-    const checkKonamiMatch = () => {
-      if (codeInput === KONAMI_CODE_DISPLAY) {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Focus the input when any key is pressed
+      if (inputRef.current && document.activeElement !== inputRef.current) {
+        inputRef.current.focus();
+      }
+      
+      // Handle backspace and delete keys
+      if (e.key === "Backspace" || e.key === "Delete") {
+        // Track deletion event
+        if (typeof window !== 'undefined' && window.dataLayer) {
+          window.dataLayer.push({
+            event: 'konami_key_delete',
+            timestamp: new Date().toISOString(),
+          });
+        }
+        
+        // Remove the last character from the sequence
+        const newSequence = [...keySequence];
+        if (newSequence.length > 0) {
+          newSequence.pop();
+          setKeySequence(newSequence);
+          
+          // Update the display text
+          let displayText = "";
+          newSequence.forEach(k => {
+            if (k === "ArrowUp") displayText += "↑";
+            else if (k === "ArrowDown") displayText += "↓";
+            else if (k === "ArrowLeft") displayText += "←";
+            else if (k === "ArrowRight") displayText += "→";
+            else displayText += k.toUpperCase();
+          });
+          setCodeInput(displayText);
+        }
+        
+        return;
+      }
+      
+      // Handle Enter key for validation
+      if (e.key === "Enter") {
+        e.preventDefault();
         validateKonamiCode(codeInput);
+        
+        // Track Enter key event
+        if (typeof window !== 'undefined' && window.dataLayer) {
+          window.dataLayer.push({
+            event: 'konami_code_validate',
+            input: codeInput,
+            timestamp: new Date().toISOString(),
+          });
+        }
+        
+        return;
+      }
+      
+      // Track the key sequence
+      const key = e.key.toLowerCase();
+      const isArrowKey = key === "arrowup" || key === "arrowdown" || key === "arrowleft" || key === "arrowright";
+      const isValidKey = isArrowKey || key === "a" || key === "b";
+      
+      if (isValidKey) {
+        // Track attempt with the actual key pressed
+        if (typeof window !== 'undefined' && window.dataLayer) {
+          window.dataLayer.push({
+            event: 'konami_key_press',
+            key: e.key,
+            timestamp: new Date().toISOString(),
+          });
+        }
+        
+        // Update the key sequence
+        const newSequence = [...keySequence, e.key];
+        if (newSequence.length > KONAMI_CODE.length) {
+          newSequence.shift(); // Keep only the last N keys
+        }
+        setKeySequence(newSequence);
+        
+        // Update the display text in the input field
+        let displayText = "";
+        newSequence.forEach(k => {
+          if (k === "ArrowUp") displayText += "↑";
+          else if (k === "ArrowDown") displayText += "↓";
+          else if (k === "ArrowLeft") displayText += "←";
+          else if (k === "ArrowRight") displayText += "→";
+          else displayText += k.toUpperCase();
+        });
+        setCodeInput(displayText);
+        
+        // Check if the sequence matches the Konami code
+        if (newSequence.length === KONAMI_CODE.length) {
+          const isMatch = newSequence.every((k, i) => k === KONAMI_CODE[i]);
+          if (isMatch) {
+            validateKonamiCode(displayText);
+          }
+        }
       }
     };
     
-    // Check on every input change
-    checkKonamiMatch();
-  }, [codeInput, KONAMI_CODE_DISPLAY]);
-
-  // Handle direct input change
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Limit to 10 characters
-    if (e.target.value.length <= 10) {
-      setCodeInput(e.target.value);
-      
-      // Track attempt with direct input
-      if (typeof window !== 'undefined' && window.dataLayer) {
-        window.dataLayer.push({
-          event: 'konami_key_direct_input',
-          input_length: e.target.value.length,
-          timestamp: new Date().toISOString(),
-        });
-      }
-    }
-  };
-  
-  // Handle input key down for Enter validation
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    // Handle arrow keys and other special keys
-    if (e.key === "ArrowUp" || e.key === "ArrowDown" || 
-        e.key === "ArrowLeft" || e.key === "ArrowRight") {
-      e.preventDefault(); // Prevent default behavior (cursor movement)
-      
-      // Map arrow keys to their corresponding symbols
-      let arrowSymbol = "";
-      switch (e.key) {
-        case "ArrowUp": arrowSymbol = "↑"; break;
-        case "ArrowDown": arrowSymbol = "↓"; break;
-        case "ArrowLeft": arrowSymbol = "←"; break;
-        case "ArrowRight": arrowSymbol = "→"; break;
-      }
-      
-      // Only add if we're under the character limit
-      if (codeInput.length < 10) {
-        setCodeInput(prev => prev + arrowSymbol);
-      }
-
-      // Track attempt with arrow key
-      if (typeof window !== 'undefined' && window.dataLayer) {
-        window.dataLayer.push({
-          event: 'konami_arrow_key_press',
-          key: e.key,
-          timestamp: new Date().toISOString(),
-        });
-      }
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      validateKonamiCode(codeInput);
-      
-      // Track Enter key event
-      if (typeof window !== 'undefined' && window.dataLayer) {
-        window.dataLayer.push({
-          event: 'konami_code_validate',
-          input: codeInput,
-          timestamp: new Date().toISOString(),
-        });
-      }
-    } else if (e.key === "Backspace") {
-      // Let the default handler work for backspace
-    } else if (e.key.length === 1 && codeInput.length < 10) {
-      // For regular single character keys, allow default behavior
-    }
-  }, [codeInput, validateKonamiCode]);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [keySequence, codeInput]);
 
   // Optimize progress bar animation with requestAnimationFrame instead of setInterval
   useEffect(() => {
@@ -263,8 +291,8 @@ const Index = () => {
         );
       }, 5000);
       
-      // Reset the input
-      setCodeInput("");
+      // Reset the key sequence
+      setKeySequence([]);
       
       return true;
     }
@@ -289,6 +317,7 @@ const Index = () => {
       
       // Clear input after error
       setCodeInput("");
+      setKeySequence([]);
     }
     
     return false;
@@ -398,19 +427,23 @@ Get in touch</span>
           </Button>
         </div>
         
-        {/* Secret Konami code input - updated to accept arrows and any characters */}
+        {/* Secret Konami code input */}
         <div className="mt-6 flex justify-center">
           <div className="relative w-48 sm:w-64 transition-opacity duration-300 opacity-60 hover:opacity-100 focus-within:opacity-100">
             <Input
               ref={inputRef}
               type="text"
-              placeholder="Enter secret code..."
+              placeholder="Use arrow keys..."
               value={codeInput}
-              onChange={handleInputChange}
-              onKeyDown={handleKeyDown}
-              maxLength={10}
               className="bg-uin-black/60 border-uin-purple/30 text-sm text-white placeholder-gray-500 focus:border-uin-purple/50"
               aria-label="Secret code input"
+              readOnly
+              onKeyDown={(e) => {
+                // Prevent default behavior for arrow keys to avoid cursor movement
+                if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+                  e.preventDefault();
+                }
+              }}
             />
             <div className="mt-1 text-xs text-gray-400">
               Press Enter to validate code
