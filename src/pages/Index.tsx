@@ -6,7 +6,7 @@ import KonamiCodeInput from "@/components/KonamiCodeInput";
 import BackgroundElements from "@/components/BackgroundElements";
 
 // Lazy load components that aren't needed immediately
-const KonamiModal = lazy(() => import("@/components/KonamiModal"));
+const CreditsEasterEgg = lazy(() => import("@/components/CreditsEasterEgg"));
 const FallingJoystick = lazy(() => import("@/components/FallingJoystick"));
 
 // Custom hook to manage animations
@@ -38,7 +38,7 @@ const useAnimationPosition = (isLoaded: boolean) => {
 const Index = () => {
   // Page loading state
   const [isLoaded, setIsLoaded] = useState(false);
-  const [showKonamiModal, setShowKonamiModal] = useState(false);
+  const [showCreditsEasterEgg, setShowCreditsEasterEgg] = useState(false);
   const [konamiActive, setKonamiActive] = useState(false);
   const { toast } = useToast();
 
@@ -73,7 +73,7 @@ const Index = () => {
   // Handle successful Konami code entry
   const handleKonamiSuccess = useCallback(() => {
     setKonamiActive(true);
-    setShowKonamiModal(true);
+    setShowCreditsEasterEgg(true);
     
     // Create a celebratory animation with more joysticks
     const celebrationJoysticks = Array.from({ length: 20 }, (_, i) => ({
@@ -111,6 +111,19 @@ const Index = () => {
     }
   }, []);
 
+  // Handle closing the credits easter egg
+  const handleCloseCredits = useCallback(() => {
+    setShowCreditsEasterEgg(false);
+    
+    // Track close event
+    if (typeof window !== 'undefined' && window.dataLayer) {
+      window.dataLayer.push({
+        event: 'konami_credits_closed',
+        timestamp: new Date().toISOString(),
+      });
+    }
+  }, []);
+
   return (
     <div className="bg-uin-black text-white min-h-screen flex flex-col justify-between relative overflow-hidden" onClick={handleBackgroundClick}>
       {/* Background elements */}
@@ -129,9 +142,9 @@ const Index = () => {
       {/* Konami code input */}
       <KonamiCodeInput onKonamiCodeSuccess={handleKonamiSuccess} />
       
-      {/* Konami Modal */}
+      {/* Credits Easter Egg */}
       <Suspense fallback={null}>
-        <KonamiModal open={showKonamiModal} onOpenChange={setShowKonamiModal} />
+        <CreditsEasterEgg open={showCreditsEasterEgg} onClose={handleCloseCredits} />
       </Suspense>
     </div>
   );

@@ -115,6 +115,17 @@
   .animate-slide {
     animation: slide 3s linear infinite;
   }
+  
+  /* Flicker animation for the easter egg text */
+  .animate-flicker {
+    text-shadow: 0 0 2px rgba(80, 44, 235, 0.5);
+    animation: flicker 1.5s infinite alternate;
+  }
+  
+  /* CRT sweep animation for the easter egg */
+  .animate-crtSweep {
+    animation: crtSweep 5s infinite;
+  }
 }
 
 /* Animation keyframes */
@@ -142,4 +153,16 @@
 @keyframes slide {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
+}
+
+@keyframes flicker {
+  0% { opacity: 1; }
+  50% { opacity: 0.95; }
+  100% { opacity: 1; }
+}
+
+@keyframes crtSweep {
+  0% { left: -100%; }
+  10% { left: 100%; }
+  100% { left: 100%; }
 }
