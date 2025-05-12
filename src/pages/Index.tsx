@@ -90,6 +90,71 @@ const Index = () => {
   const [progress, setProgress] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  // Handle Konami code input validation
+  const validateKonamiCode = useCallback((input: string) => {
+    if (input === KONAMI_CODE_DISPLAY) {
+      // Store konami found in localStorage
+      localStorage.setItem('konami_found', 'true');
+      setKonamiActive(true);
+      setShowKonamiModal(true);
+      
+      // Track successful konami code entry
+      if (typeof window !== 'undefined' && window.dataLayer) {
+        window.dataLayer.push({
+          event: 'konami_code_success',
+          timestamp: new Date().toISOString(),
+        });
+      }
+      
+      // Create a celebratory animation with more joysticks
+      const celebrationJoysticks = Array.from({ length: 20 }, (_, i) => ({
+        id: nextJoystickId + i,
+        x: Math.random() * window.innerWidth,
+        rotation: Math.random() * 360
+      }));
+      
+      setFallingJoysticks(prev => [...prev, ...celebrationJoysticks]);
+      setNextJoystickId(prev => prev + 20);
+      
+      // Clean up celebration joysticks after animation
+      setTimeout(() => {
+        setFallingJoysticks(prev => 
+          prev.filter(joystick => !celebrationJoysticks.some(cj => cj.id === joystick.id))
+        );
+      }, 5000);
+      
+      // Reset the key sequence
+      setKeySequence([]);
+      
+      return true;
+    }
+    
+    // If entered full sequence but incorrect
+    if (input.length === KONAMI_CODE_DISPLAY.length && input !== KONAMI_CODE_DISPLAY) {
+      // Show error toast
+      toast({
+        title: "Invalid Code",
+        description: "That's not the secret code. Try again!",
+        variant: "destructive",
+      });
+      
+      // Track error
+      if (typeof window !== 'undefined' && window.dataLayer) {
+        window.dataLayer.push({
+          event: 'konami_code_error',
+          input: input,
+          timestamp: new Date().toISOString(),
+        });
+      }
+      
+      // Clear input after error
+      setCodeInput("");
+      setKeySequence([]);
+    }
+    
+    return false;
+  }, [KONAMI_CODE_DISPLAY, nextJoystickId, toast]);
+
   // Optimize loading sequence - defer non-critical operations
   useEffect(() => {
     if (document.readyState === 'complete') {
@@ -211,7 +276,7 @@ const Index = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [keySequence, codeInput]);
+  }, [keySequence, codeInput, validateKonamiCode]);
 
   // Optimize progress bar animation with requestAnimationFrame instead of setInterval
   useEffect(() => {
@@ -257,71 +322,6 @@ const Index = () => {
     animationFrameId = requestAnimationFrame(moveAnimation);
     return () => cancelAnimationFrame(animationFrameId);
   }, [isLoaded]);
-
-  // Handle Konami code input validation
-  const validateKonamiCode = useCallback((input: string) => {
-    if (input === KONAMI_CODE_DISPLAY) {
-      // Store konami found in localStorage
-      localStorage.setItem('konami_found', 'true');
-      setKonamiActive(true);
-      setShowKonamiModal(true);
-      
-      // Track successful konami code entry
-      if (typeof window !== 'undefined' && window.dataLayer) {
-        window.dataLayer.push({
-          event: 'konami_code_success',
-          timestamp: new Date().toISOString(),
-        });
-      }
-      
-      // Create a celebratory animation with more joysticks
-      const celebrationJoysticks = Array.from({ length: 20 }, (_, i) => ({
-        id: nextJoystickId + i,
-        x: Math.random() * window.innerWidth,
-        rotation: Math.random() * 360
-      }));
-      
-      setFallingJoysticks(prev => [...prev, ...celebrationJoysticks]);
-      setNextJoystickId(prev => prev + 20);
-      
-      // Clean up celebration joysticks after animation
-      setTimeout(() => {
-        setFallingJoysticks(prev => 
-          prev.filter(joystick => !celebrationJoysticks.some(cj => cj.id === joystick.id))
-        );
-      }, 5000);
-      
-      // Reset the key sequence
-      setKeySequence([]);
-      
-      return true;
-    }
-    
-    // If entered full sequence but incorrect
-    if (input.length === KONAMI_CODE_DISPLAY.length && input !== KONAMI_CODE_DISPLAY) {
-      // Show error toast
-      toast({
-        title: "Invalid Code",
-        description: "That's not the secret code. Try again!",
-        variant: "destructive",
-      });
-      
-      // Track error
-      if (typeof window !== 'undefined' && window.dataLayer) {
-        window.dataLayer.push({
-          event: 'konami_code_error',
-          input: input,
-          timestamp: new Date().toISOString(),
-        });
-      }
-      
-      // Clear input after error
-      setCodeInput("");
-      setKeySequence([]);
-    }
-    
-    return false;
-  }, [KONAMI_CODE_DISPLAY, nextJoystickId, toast]);
 
   // Limit joystick animations to reduce CPU usage
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -449,7 +449,7 @@ Get in touch</span>
               Press Enter to validate code
             </div>
             {konamiActive && (
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-uin-purple">
+              <div className="absolute right-1/2 top-1/2 transform translate-x-1/2 -translate-y-1/2 text-uin-purple">
                 <Joystick size={16} className="animate-pulse" />
               </div>
             )}
