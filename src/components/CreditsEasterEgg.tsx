@@ -44,7 +44,7 @@ const CreditsEasterEgg = ({ open, onClose }: CreditsEasterEggProps) => {
   return (
     <div 
       ref={easterEggRef}
-      className="fixed inset-0 bg-uin-black text-uin-purple font-['Share_Tech_Mono'] z-[9999] p-10 overflow-y-auto"
+      className="fixed inset-0 bg-uin-black text-uin-purple font-['wanderer'] z-[9999] p-10 overflow-y-auto"
       style={{
         backgroundImage: 'linear-gradient(rgba(139, 92, 246, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px)',
         backgroundSize: '20px 20px',
