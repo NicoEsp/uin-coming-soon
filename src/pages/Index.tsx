@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Mail, Joystick, AlertTriangle } from "lucide-react";
@@ -448,11 +447,6 @@ Get in touch</span>
             <div className="mt-1 text-xs text-gray-400">
               Press Enter to validate code
             </div>
-            {konamiActive && (
-              <div className="absolute right-1/2 top-1/2 transform translate-x-1/2 -translate-y-1/2 text-uin-purple">
-                <Joystick size={16} className="animate-pulse" />
-              </div>
-            )}
           </div>
         </div>
         
