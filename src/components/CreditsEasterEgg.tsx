@@ -44,14 +44,15 @@ const CreditsEasterEgg = ({ open, onClose }: CreditsEasterEggProps) => {
   return (
     <div 
       ref={easterEggRef}
-      className="fixed inset-0 bg-[rgb(221,217,231)] text-[rgb(80,44,235)] font-['Share_Tech_Mono'] z-[9999] p-10 overflow-y-auto"
+      className="fixed inset-0 bg-uin-black text-uin-purple font-['Share_Tech_Mono'] z-[9999] p-10 overflow-y-auto"
       style={{
-        animation: 'crtSweep 5s infinite',
+        backgroundImage: 'linear-gradient(rgba(139, 92, 246, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px)',
+        backgroundSize: '20px 20px',
       }}
     >
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 p-2 hover:bg-[rgba(80,44,235,0.2)] rounded-full transition-colors"
+        className="absolute top-4 right-4 p-2 hover:bg-uin-purple/20 rounded-full transition-colors"
         aria-label="Close credits"
       >
         <X size={24} />

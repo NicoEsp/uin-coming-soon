@@ -4,9 +4,9 @@ import { useToast } from "@/hooks/use-toast";
 import MainContent from "@/components/MainContent";
 import KonamiCodeInput from "@/components/KonamiCodeInput";
 import BackgroundElements from "@/components/BackgroundElements";
+import CreditsEasterEgg from "@/components/CreditsEasterEgg";
 
 // Lazy load components that aren't needed immediately
-const CreditsEasterEgg = lazy(() => import("@/components/CreditsEasterEgg"));
 const FallingJoystick = lazy(() => import("@/components/FallingJoystick"));
 
 // Custom hook to manage animations
@@ -75,6 +75,9 @@ const Index = () => {
     setKonamiActive(true);
     setShowCreditsEasterEgg(true);
     
+    // Store in localStorage to persist between page reloads if needed
+    localStorage.setItem('konami_found', 'true');
+    
     // Create a celebratory animation with more joysticks
     const celebrationJoysticks = Array.from({ length: 20 }, (_, i) => ({
       id: nextJoystickId + i,
@@ -108,12 +111,18 @@ const Index = () => {
     const foundKonami = localStorage.getItem('konami_found');
     if (foundKonami) {
       setKonamiActive(true);
+      // Check if we should show the credits (if it was open when page was refreshed)
+      const showCredits = localStorage.getItem('show_credits');
+      if (showCredits === 'true') {
+        setShowCreditsEasterEgg(true);
+      }
     }
   }, []);
 
   // Handle closing the credits easter egg
   const handleCloseCredits = useCallback(() => {
     setShowCreditsEasterEgg(false);
+    localStorage.removeItem('show_credits');
     
     // Track close event
     if (typeof window !== 'undefined' && window.dataLayer) {
@@ -123,6 +132,15 @@ const Index = () => {
       });
     }
   }, []);
+
+  // Update localStorage when credits visibility changes
+  useEffect(() => {
+    if (showCreditsEasterEgg) {
+      localStorage.setItem('show_credits', 'true');
+    } else {
+      localStorage.removeItem('show_credits');
+    }
+  }, [showCreditsEasterEgg]);
 
   return (
     <div className="bg-uin-black text-white min-h-screen flex flex-col justify-between relative overflow-hidden" onClick={handleBackgroundClick}>
@@ -142,10 +160,8 @@ const Index = () => {
       {/* Konami code input */}
       <KonamiCodeInput onKonamiCodeSuccess={handleKonamiSuccess} />
       
-      {/* Credits Easter Egg */}
-      <Suspense fallback={null}>
-        <CreditsEasterEgg open={showCreditsEasterEgg} onClose={handleCloseCredits} />
-      </Suspense>
+      {/* Credits Easter Egg - moved outside of Suspense */}
+      <CreditsEasterEgg open={showCreditsEasterEgg} onClose={handleCloseCredits} />
     </div>
   );
 };
