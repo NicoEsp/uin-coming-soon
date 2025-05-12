@@ -44,7 +44,7 @@ const CreditsEasterEgg = ({ open, onClose }: CreditsEasterEggProps) => {
   return (
     <div 
       ref={easterEggRef}
-      className="fixed inset-0 bg-uin-black text-uin-purple font-['wanderer'] z-[9999] p-10 overflow-y-auto"
+      className="fixed inset-0 bg-uin-black text-uin-purple z-[9999] p-10 overflow-y-auto"
       style={{
         backgroundImage: 'linear-gradient(rgba(139, 92, 246, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px)',
         backgroundSize: '20px 20px',
@@ -58,9 +58,13 @@ const CreditsEasterEgg = ({ open, onClose }: CreditsEasterEggProps) => {
         <X size={24} />
       </button>
       
-      <h1 className="text-2xl md:text-3xl mb-8 text-center animate-flicker">
+      <h1 className="text-2xl md:text-3xl mb-2 text-center animate-flicker">
         UIN Dev Mode: Credits Unlocked
       </h1>
+      
+      <p className="text-center text-uin-purple/80 mb-8">
+        made with love and passion by these people:
+      </p>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-10 max-w-3xl mx-auto">
         <div className="animate-flicker">Alberto Czernikowski</div><div className="animate-flicker">Founder & CCO</div>
