@@ -46,7 +46,10 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-4P9GWFRE6C', { 'send_page_view': false });
+      gtag('config', 'G-4P9GWFRE6C', { 
+        'send_page_view': false,
+        'transport_type': 'beacon' 
+      });
       // Defer sending pageview until after critical content loads
       window.addEventListener('load', function() {
         gtag('event', 'page_view');
@@ -56,13 +59,30 @@
     <!-- Google Tag Manager - deferred to improve page load -->
     <script>
       // Defer GTM loading
-      window.addEventListener('load', function() {
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-W8MSM63N');
+      window.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','GTM-W8MSM63N');
+        }, 2000); // Delay by 2 seconds
       });
+    </script>
+
+    <!-- Register Service Worker for offline support -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(function(registration) {
+              console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch(function(error) {
+              console.log('Service Worker registration failed:', error);
+            });
+        });
+      }
     </script>
   </head>
 

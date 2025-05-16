@@ -1,4 +1,5 @@
 
+import { memo } from "react";
 import MainLogo from "./MainLogo";
 import ProgressIndicator from "./ProgressIndicator";
 import ContactButton from "./ContactButton";
@@ -7,7 +8,7 @@ interface MainContentProps {
   isLoaded: boolean;
 }
 
-const MainContent = ({ isLoaded }: MainContentProps) => {
+const MainContent = memo(({ isLoaded }: MainContentProps) => {
   return (
     <div className="container mx-auto px-4 py-8 sm:py-16 relative z-20 max-w-4xl text-center flex-grow flex flex-col justify-center">
       {/* Logo above title */}
@@ -32,6 +33,8 @@ const MainContent = ({ isLoaded }: MainContentProps) => {
       <ContactButton />
     </div>
   );
-};
+});
+
+MainContent.displayName = 'MainContent';
 
 export default MainContent;

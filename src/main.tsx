@@ -25,19 +25,6 @@ const LoadingFallback = () => (
 const rootElement = document.getElementById("root")!;
 const root = createRoot(rootElement);
 
-// Preload the Wanderer font for the easter egg (using a Google Font that looks futuristic)
-const fontPreload = document.createElement('link');
-fontPreload.rel = 'preload';
-fontPreload.href = 'https://fonts.googleapis.com/css2?family=Orbitron&display=swap';
-fontPreload.as = 'style';
-document.head.appendChild(fontPreload);
-
-// Actually load the font
-const fontLink = document.createElement('link');
-fontLink.rel = 'stylesheet';
-fontLink.href = 'https://fonts.googleapis.com/css2?family=Orbitron&display=swap';
-document.head.appendChild(fontLink);
-
 // Render with minimal initial payload
 root.render(
   <Suspense fallback={<LoadingFallback />}>

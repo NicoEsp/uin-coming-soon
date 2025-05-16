@@ -1,48 +1,24 @@
 
-import { lazy, Suspense, useState, useEffect, useCallback } from "react";
+import { lazy, Suspense, useState, useEffect, useCallback, useMemo } from "react";
 import { useToast } from "@/hooks/use-toast";
 import MainContent from "@/components/MainContent";
 import KonamiCodeInput from "@/components/KonamiCodeInput";
 import BackgroundElements from "@/components/BackgroundElements";
 import CreditsEasterEgg from "@/components/CreditsEasterEgg";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // Lazy load components that aren't needed immediately
 const FallingJoystick = lazy(() => import("@/components/FallingJoystick"));
-
-// Custom hook to manage animations
-const useAnimationPosition = (isLoaded: boolean) => {
-  const [animationPosition, setAnimationPosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    if (!isLoaded) return;
-
-    let animationFrameId: number;
-    const maxX = window.innerWidth * 0.05;
-    const maxY = window.innerHeight * 0.05;
-    
-    const moveAnimation = (timestamp: number) => {
-      setAnimationPosition({
-        x: Math.sin(timestamp / 2000) * maxX,
-        y: Math.cos(timestamp / 2000) * maxY
-      });
-      animationFrameId = requestAnimationFrame(moveAnimation);
-    };
-    
-    animationFrameId = requestAnimationFrame(moveAnimation);
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [isLoaded]);
-
-  return animationPosition;
-};
 
 const Index = () => {
   // Page loading state
   const [isLoaded, setIsLoaded] = useState(false);
   const [showCreditsEasterEgg, setShowCreditsEasterEgg] = useState(false);
   const [konamiActive, setKonamiActive] = useState(false);
+  const isMobile = useIsMobile();
   const { toast } = useToast();
 
-  // Falling joysticks management
+  // Falling joysticks management - optimized with useMemo
   const [fallingJoysticks, setFallingJoysticks] = useState<Array<{
     id: number;
     x: number;
@@ -50,64 +26,78 @@ const Index = () => {
   }>>([]);
   const [nextJoystickId, setNextJoystickId] = useState(0);
   
-  // Get animated position (now unused but kept for future expansion)
-  const animationPosition = useAnimationPosition(isLoaded);
-
-  // Handle background click to create falling joysticks
+  // Optimization: Limit joystick count based on device
+  const maxJoysticks = useMemo(() => isMobile ? 2 : 5, [isMobile]);
+  
+  // Handle background click to create falling joysticks - memoized with useCallback
   const handleBackgroundClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (fallingJoysticks.length >= 3) return; // Reduced for better performance
+    if (fallingJoysticks.length >= maxJoysticks) return;
 
     const newJoystick = {
       id: nextJoystickId,
       x: e.clientX || Math.random() * window.innerWidth,
       rotation: Math.random() * 360
     };
+    
     setFallingJoysticks(prev => [...prev, newJoystick]);
     setNextJoystickId(prev => prev + 1);
 
+    // Clean up joystick after animation
+    const removalTime = isMobile ? 2000 : 3000; // Shorter animation on mobile
     setTimeout(() => {
       setFallingJoysticks(prev => prev.filter(joystick => joystick.id !== newJoystick.id));
-    }, 3000);
-  }, [fallingJoysticks.length, nextJoystickId]);
+    }, removalTime);
+  }, [fallingJoysticks.length, nextJoystickId, maxJoysticks, isMobile]);
 
-  // Handle successful Konami code entry
+  // Handle successful Konami code entry - memoized
   const handleKonamiSuccess = useCallback(() => {
     setKonamiActive(true);
     setShowCreditsEasterEgg(true);
     
-    // Store in localStorage to persist between page reloads if needed
+    // Store in localStorage to persist between page reloads
     localStorage.setItem('konami_found', 'true');
     
-    // Create a celebratory animation with more joysticks
-    const celebrationJoysticks = Array.from({ length: 20 }, (_, i) => ({
+    // Create a celebratory animation with joysticks - reduced count for mobile
+    const celebrationCount = isMobile ? 8 : 15;
+    const celebrationJoysticks = Array.from({ length: celebrationCount }, (_, i) => ({
       id: nextJoystickId + i,
       x: Math.random() * window.innerWidth,
       rotation: Math.random() * 360
     }));
     
     setFallingJoysticks(prev => [...prev, ...celebrationJoysticks]);
-    setNextJoystickId(prev => prev + 20);
+    setNextJoystickId(prev => prev + celebrationCount);
     
-    // Clean up celebration joysticks after animation
+    // Clean up celebration joysticks after animation - shorter time for mobile
+    const removalTime = isMobile ? 4000 : 5000;
     setTimeout(() => {
       setFallingJoysticks(prev => 
         prev.filter(joystick => !celebrationJoysticks.some(cj => cj.id === joystick.id))
       );
-    }, 5000);
-  }, [nextJoystickId]);
+    }, removalTime);
+  }, [nextJoystickId, isMobile]);
   
   // Optimize loading sequence - defer non-critical operations
   useEffect(() => {
+    // Use requestIdleCallback for non-critical initialization
+    const handleLoad = () => {
+      // Use requestAnimationFrame to avoid blocking the main thread
+      requestAnimationFrame(() => {
+        setIsLoaded(true);
+      });
+    };
+
     if (document.readyState === 'complete') {
-      setIsLoaded(true);
+      handleLoad();
     } else {
-      window.addEventListener('load', () => setIsLoaded(true));
-      return () => window.removeEventListener('load', () => setIsLoaded(true));
+      window.addEventListener('load', handleLoad);
+      return () => window.removeEventListener('load', handleLoad);
     }
   }, []);
 
-  // Check if user already found the konami code
+  // Check if user already found the konami code - optimized localStorage reading
   useEffect(() => {
+    // Only run once on component mount
     const foundKonami = localStorage.getItem('konami_found');
     if (foundKonami) {
       setKonamiActive(true);
@@ -119,7 +109,7 @@ const Index = () => {
     }
   }, []);
 
-  // Handle closing the credits easter egg
+  // Handle closing the credits easter egg - memoized
   const handleCloseCredits = useCallback(() => {
     setShowCreditsEasterEgg(false);
     localStorage.removeItem('show_credits');
@@ -133,35 +123,39 @@ const Index = () => {
     }
   }, []);
 
-  // Update localStorage when credits visibility changes
+  // Update localStorage when credits visibility changes - optimized with dependencies
   useEffect(() => {
     if (showCreditsEasterEgg) {
       localStorage.setItem('show_credits', 'true');
-    } else {
+    } else if (konamiActive) { // Only remove if konami was activated
       localStorage.removeItem('show_credits');
     }
-  }, [showCreditsEasterEgg]);
+  }, [showCreditsEasterEgg, konamiActive]);
 
   return (
     <div className="bg-uin-black text-white min-h-screen flex flex-col justify-between relative overflow-hidden" onClick={handleBackgroundClick}>
-      {/* Background elements */}
-      <BackgroundElements isLoaded={isLoaded} />
+      {/* Background elements - only render when needed */}
+      {isLoaded && <BackgroundElements isLoaded={isLoaded} />}
       
-      {/* Falling joysticks */}
-      <Suspense fallback={null}>
-        {fallingJoysticks.map(joystick => (
-          <FallingJoystick key={joystick.id} x={joystick.x} rotation={joystick.rotation} />
-        ))}
-      </Suspense>
+      {/* Falling joysticks - optimized with Suspense and conditional rendering */}
+      {fallingJoysticks.length > 0 && (
+        <Suspense fallback={null}>
+          {fallingJoysticks.map(joystick => (
+            <FallingJoystick key={joystick.id} x={joystick.x} rotation={joystick.rotation} />
+          ))}
+        </Suspense>
+      )}
       
       {/* Main content */}
       <MainContent isLoaded={isLoaded} />
       
-      {/* Konami code input */}
+      {/* Konami code input - always included for accessibility */}
       <KonamiCodeInput onKonamiCodeSuccess={handleKonamiSuccess} />
       
-      {/* Credits Easter Egg - moved outside of Suspense */}
-      <CreditsEasterEgg open={showCreditsEasterEgg} onClose={handleCloseCredits} />
+      {/* Credits Easter Egg - only render when needed */}
+      {showCreditsEasterEgg && (
+        <CreditsEasterEgg open={showCreditsEasterEgg} onClose={handleCloseCredits} />
+      )}
     </div>
   );
 };
