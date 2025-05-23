@@ -18,8 +18,13 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+# Disallow non-essential paths
+Disallow: /admin/
+Disallow: /api/
+Disallow: /*.json$
+
 # Sitemap location
-# Sitemap: https://uin.tech/sitemap.xml
+Sitemap: https://uin.tech/sitemap.xml
 
 # Crawl delay to prevent server overload
 Crawl-delay: 1

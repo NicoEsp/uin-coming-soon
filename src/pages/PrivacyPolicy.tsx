@@ -3,8 +3,13 @@ const PrivacyPolicy = () => {
   return (
     <div className="bg-uin-black text-white min-h-screen flex flex-col">
       <main className="flex-grow container mx-auto px-4 py-20 md:py-24">
-        <div className="max-w-4xl mx-auto bg-uin-black/50 p-8 rounded-lg border border-uin-purple/20 backdrop-blur-md">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-8 gradient-text">Privacy Policy</h1>
+        <article className="max-w-4xl mx-auto bg-uin-black/50 p-8 rounded-lg border border-uin-purple/20 backdrop-blur-md">
+          <header className="mb-8">
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4 gradient-text">Privacy Policy</h1>
+            <p className="text-gray-300">
+              Learn how UIN Tech protects your privacy and handles your personal information.
+            </p>
+          </header>
           
           <div className="space-y-6 text-gray-300">
             <section>
@@ -85,10 +90,30 @@ const PrivacyPolicy = () => {
               <p>
                 If you have any questions about this Privacy Policy, please contact us at:
               </p>
-              <p className="mt-2 text-uin-purple">sales@uin.tech</p>
+              <address className="mt-2 text-uin-purple not-italic">
+                <a href="mailto:sales@uin.tech" className="hover:underline">sales@uin.tech</a>
+              </address>
             </section>
           </div>
-        </div>
+        </article>
+
+        {/* Structured data for the Privacy Policy page */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "Privacy Policy - UIN Tech",
+            "description": "UIN Tech's privacy policy explaining how we collect, use, and protect your personal information.",
+            "url": "https://uin.tech/privacy-policy",
+            "dateModified": "2025-04-07",
+            "inLanguage": "en-US",
+            "isPartOf": {
+              "@type": "WebSite",
+              "name": "UIN Tech",
+              "url": "https://uin.tech"
+            }
+          })}
+        </script>
       </main>
     </div>
   );

@@ -10,10 +10,12 @@ const MainLogo = memo(() => {
       {isLoaded && (
         <img 
           src="/lovable-uploads/47f345e2-aea8-4e20-b3ec-af9eacae0232.png" 
-          alt="UIN Logo" 
+          alt="UIN Logo - Gaming-Powered Fintech Solutions for Gen-Z Users and Financial Applications"
           className="w-48 sm:w-64 md:w-72 h-auto mb-6 logo-pulse"
           width="288" 
           height="288"
+          loading="eager"
+          fetchPriority="high"
         />
       )}
       {/* Hidden image to preload */}
@@ -25,6 +27,7 @@ const MainLogo = memo(() => {
         height="288"
         onLoad={() => setIsLoaded(true)}
         fetchPriority="high"
+        loading="eager"
       />
     </>
   );
